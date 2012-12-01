@@ -26,10 +26,10 @@ var Byom = function() {
 		console.log('Current song is finished!');
 		var nextSong = computeNextSong();
 		if(nextSong != null) {
-			playingSong = nextSong;
+			playingSong = nextSong;		
 			playSong(playingSong);
-			$('#playing-title').html(playingSong.title);
-			$('#playing-artist').html(playingSong.artist);
+			$('#playing-title').html(playingSong.name);
+			$('#playing-artist').html(playingSong.artists[0].name);
 		} else {
 			$('#playing-song').html('End of playlist :(');
 		}
@@ -180,18 +180,17 @@ var Byom = function() {
 		models.player.playTrack(models.Track.fromURI(song.uri));
 	}
 
-	var initCallback = function(callback) {
+	this.initCallback = function(callback) {
 		console.log('setting callback');
 		// Update the DOM when the song changes
 	    models.player.addEventListener('change', updateCurrentTrack);
 
 	    function updateCurrentTrack() {
 	    	console.log('Update track');
-	    	// we are not using playlists, so this should always be null
-	        if (!models.player.playing) {
+	    	// song is finished
+	        if (!models.player.playing && player.position == 0) {
 	            console.log('What\'s next?');
 	            callback();
-	            console.log('Called callback');
 	        } else {
 	        	console.log('More?');
 	        	console.log(models.player);
@@ -199,5 +198,5 @@ var Byom = function() {
 	    }
 	}
 
-	initCallback(this.songFinished);
+	this.initCallback(this.songFinished);
 }
