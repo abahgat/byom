@@ -25,9 +25,9 @@ var Byom = function() {
 	this.songFinished = function() {
 		var nextSong = computeNextSong();
 		if(nextSong != null) {
-			playingSong = nextSong[0];
-			$('#playing-title').html(playingSong.title);
-			$('#playing-artist').html(playingSong.artist);
+			playingSong = nextSong;		
+			$('#playing-title').html(playingSong.name);
+			$('#playing-artist').html(playingSong.artists[0].name);
 		} else {
 			$('#playing-song').html('End of playlist :(');
 		}
