@@ -9,9 +9,11 @@
 	<script type="text/javascript" src="byom.js"></script>
 	<script type="text/javascript">
 		var byom = null;
-		$(document).ready(function() {
+		var models = null;
+		require(['$api/models'], function(models) {
+			window.models = models;
 			byom = new Byom();
-			byom.getJukebox();					
+           	byom.getJukebox();
 		});
 	</script>
 </head>

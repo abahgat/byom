@@ -2,9 +2,6 @@
 var Byom = function() {
 	var playlist = [];
 	var playingSong = null;
-	var sp = getSpotifyApi(1);
-	var models = sp.require('sp://import/scripts/api/models');
-	var views = sp.require('sp://import/scripts/api/views');
 	var poll;
 			
 	this.updatePlaylist = function() {
@@ -40,11 +37,21 @@ var Byom = function() {
 		$.getJSON('http://api.usergrid.com/diderikvw/byom/jukeboxes/fd3447c9-3bd9-11e2-9141-02e81ae640dc', function(data) {
 			console.log(data);
 			$.each(data.entities[0].playlists, function(index, value) {				
-				var spotifyPlaylist = models.Playlist.fromURI(value);
-				console.log(spotifyPlaylist);
-				for(var i = 0; i < spotifyPlaylist.length; i++) {
-					playlist.push(spotifyPlaylist.get(i));
-				}
+				console.log('playlist ' + value);
+				models.Playlist.fromURI(value).load('name', 'tracks').done(function(spotifyPlaylist) {
+					console.log('Playlist ' + JSON.stringify(spotifyPlaylist));
+					lastplaylist = spotifyPlaylist;
+					spotifyPlaylist.tracks.snapshot().done(function(tracks) {
+						for(var i = 0; i < tracks.length; i++) {
+							console.log('Track ' + JSON.stringify(tracks.get(i)));
+							lasttrack = tracks.get(i);
+							playlist.push(tracks.get(i));
+						}
+					});
+				  	
+				  	
+				});
+
 			});
 			byom.updatePlaylist();
 		})
