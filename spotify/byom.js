@@ -18,25 +18,29 @@ var Byom = function() {
 		$.each(playlist, function(index, value) {			
 			playlistUl.append(buildSongLi(value));			
 		});
+		var listitems = playlistUl.children('li').get();
+		listitems.sort(function(a, b) {
+   			return $(a).data('owners') < $(b).data('owners');
+		});
+		$.each(listitems, function(idx, itm) { 					
+			playlistUl.append(itm);		
+			$(itm).hide().show('slow');
+		});
 		playlistUl.find('li').each(function(index, value) {
 			$(this).show('slow');
-		});
-		setTimeout(this.reorderPlaylist, 2500);
+		});		
 	}
 
 	this.reorderPlaylist = function() {
 		console.log('reorder');
 		var ul = $('#playlist');
-		var listitems = ul.children('li').get();
-		listitems.sort(function(a, b) {
-   			return $(a).data('owners') < $(b).data('owners');
-		});
-		$.each(listitems, function(idx, itm) { 			
-			ul.append(itm);			
-		 });
+		
 	}
 
 	this.songFinished = function() {
+		if(playingSong != null) {
+			delete playlist[playingSong.uri];
+		}
 		var nextSong = computeNextSong();
 		if(nextSong != null) {
 			playingSong = nextSong;		
@@ -49,7 +53,7 @@ var Byom = function() {
 	}
 
 	this.scrollUpPlaylist = function() {
-		$('#playlist li:first').hide('slow');
+		$('#playlist li:first').hide('slow').remove();
 	}
 
 
