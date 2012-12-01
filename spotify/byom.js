@@ -12,6 +12,7 @@ var Byom = function() {
 			
 	this.updatePlaylist = function() {
 		console.log(playlist);
+		$('#playlist-container').show();
 		var playlistUl = $('#playlist');
 		playlistUl.empty();
 		$.each(playlist, function(index, value) {			
@@ -20,6 +21,19 @@ var Byom = function() {
 		playlistUl.find('li').each(function(index, value) {
 			$(this).show('slow');
 		});
+		setTimeout(this.reorderPlaylist, 2500);
+	}
+
+	this.reorderPlaylist = function() {
+		console.log('reorder');
+		var ul = $('#playlist');
+		var listitems = ul.children('li').get();
+		listitems.sort(function(a, b) {
+   			return $(a).data('owners') < $(b).data('owners');
+		});
+		$.each(listitems, function(idx, itm) { 			
+			ul.append(itm);			
+		 });
 	}
 
 	this.songFinished = function() {
@@ -40,7 +54,7 @@ var Byom = function() {
 
 
 	this.getJukebox = function() {
-		$.getJSON('http://api.usergrid.com/diderikvw/byom/jukeboxes/', function(data) {
+		$.getJSON(api_base_url + 'jukeboxes/' + jukebox_uuid, function(data) {
 			console.log(data);
 			if(data.entities[0].modified > latest_jukebox_poll) {
 				$.each(data.entities[0].playlists, function(index, value) {				
@@ -124,12 +138,16 @@ var Byom = function() {
 	this.addSpotifyPlaylist = function(playlistURI) {				
 		models.Playlist.fromURI(playlistURI).load('name', 'tracks', 'owner').done(function(spotifyPlaylist) {			
 			lastplaylist = spotifyPlaylist;
-			models.User.fromURI(spotifyPlaylist.owner).load().done(function(user) {
+			models.User.fromURI(spotifyPlaylist.owner).load('name', 'image').done(function(user) {
 				spotifyPlaylist.tracks.snapshot().done(function(tracks) {
+					console.log("PLAYLIST OWNER " + JSON.stringify(user));
 					for(var i = 0; i < tracks.length; i++) {						
 						var lasttrack = tracks.get(i);												
 						if(playlist[lasttrack.uri] != undefined) {
-							playlist[lasttrack.uri].owners.push[user];
+							console.log('Adding owner to track ' + lasttrack.uri);
+							console.log(playlist[lasttrack.uri].owners);
+							playlist[lasttrack.uri].owners.push(user);
+							console.log(playlist[lasttrack.uri].owners);
 						} else {
 							lasttrack.owners = [user];
 							playlist[lasttrack.uri] = lasttrack;
@@ -156,16 +174,19 @@ var Byom = function() {
 	var buildSongLi = function(song) {	
 		console.log(song);
 		//Probably ask spotify for the whole song data from the song id
-		var ret =  '<li style="display: none"><span class="song-title">' + song.name + '</span>';
+		var ret =  '<li style="display: none" class="playlist-item" data-owners="' + song.owners.length + '">';
 		if(typeof(song.artists) == undefined || song.artists.length <= 0) {
 			return;
 		} else {
-			ret += '<span class="song-artist">' + song.artists[0].name + '<span><ul class="song-users">';
+			ret += '<span class="song-artist">' + song.artists[0].name + '</span> - ';
 		}
 
-		/*$.each(song.users, function(index, value) {						
-			ret += '<li class="user">' + value + '</li>';
-		});*/
+		ret += '<span class="song-title">' + song.name + '</span>';
+
+		ret += '<ul class="song-users">';
+		$.each(song.owners, function(index, value) {						
+			ret += '<li class="song-user"><img class="user-thumbnail" src="' + value.image + '" title="' + value.name + '"/></li>';
+		});
 
 		ret += '</ul></li>';
 
