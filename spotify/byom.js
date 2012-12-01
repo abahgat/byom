@@ -3,7 +3,7 @@ var Byom = function() {
 	var api_base_url = 'http://api.usergrid.com/diderikvw/byom/';
 	var jukebox_uuid = 'b29c4d6f-3bea-11e2-9141-02e81ae640dc';
 	
-	var playlist = [];
+	var playlist = {};
 	var playingSong = null;	
 	var swipes_poll;
 	var latest_swipes_poll = 0;
