@@ -24,7 +24,7 @@ var Byom = function() {
 
 	this.songFinished = function() {
 		var nextSong = computeNextSong();
-		if(nextSong.length > 0) {
+		if(nextSong != null) {
 			playingSong = nextSong[0];
 			$('#playing-title').html(playingSong.title);
 			$('#playing-artist').html(playingSong.artist);
