@@ -38,12 +38,15 @@ var Byom = function() {
 	}
 
 	this.songFinished = function() {
+
 		if(playingSong != null) {
 			delete playlist[playingSong.uri];
 		}
+		console.log('Current song is finished!');
 		var nextSong = computeNextSong();
 		if(nextSong != null) {
 			playingSong = nextSong;		
+			playSong(playingSong);
 			$('#playing-title').html(playingSong.name);
 			$('#playing-artist').html(playingSong.artists[0].name);
 		} else {
@@ -172,6 +175,7 @@ var Byom = function() {
 				}
 			}
 		}
+		console.log('And the next song is... ' + candidate_next.name);
 		return candidate_next;
 	}
 
@@ -196,4 +200,29 @@ var Byom = function() {
 
 		return ret;
 	}
+
+	var playSong = function(song) {
+		console.log('About to play ' + song.name);
+		models.player.playTrack(models.Track.fromURI(song.uri));
+	}
+
+	this.initCallback = function(callback) {
+		console.log('setting callback');
+		// Update the DOM when the song changes
+	    models.player.addEventListener('change', updateCurrentTrack);
+
+	    function updateCurrentTrack() {
+	    	console.log('Update track');
+	    	// song is finished
+	        if (!models.player.playing && player.position == 0) {
+	            console.log('What\'s next?');
+	            callback();
+	        } else {
+	        	console.log('More?');
+	        	console.log(models.player);
+	        }
+	    }
+	}
+
+	this.initCallback(this.songFinished);
 }
