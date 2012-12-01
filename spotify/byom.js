@@ -19,12 +19,13 @@ var Byom = function() {
 			playlistUl.append(buildSongLi(value));			
 		});
 		var listitems = playlistUl.children('li').get();
+
 		listitems.sort(function(a, b) {
    			return $(a).data('owners') < $(b).data('owners');
 		});
 		$.each(listitems, function(idx, itm) { 					
 			playlistUl.append(itm);		
-			$(itm).hide().show('slow');
+			//$(itm).hide().show('slow');
 		});
 		playlistUl.find('li').each(function(index, value) {
 			$(this).show('slow');
@@ -53,6 +54,14 @@ var Byom = function() {
 			$('#playing-song').html('End of playlist :(');
 		}
 		this.scrollUpPlaylist();
+	}
+
+	this.moveUpLi = function(uri) {		
+
+		var li = $('#playlist li[data-uri="' + uri + '"]');
+		li.hide('slow');
+		$('#playlist').append(li);
+		li.show('slow').remove();
 	}
 
 	this.scrollUpPlaylist = function() {
@@ -150,14 +159,13 @@ var Byom = function() {
 					console.log("PLAYLIST OWNER " + JSON.stringify(user));
 					for(var i = 0; i < tracks.length; i++) {						
 						var lasttrack = tracks.get(i);												
-						if(playlist[lasttrack.uri] != undefined) {
-							console.log('Adding owner to track ' + lasttrack.uri);
-							console.log(playlist[lasttrack.uri].owners);
+						if(playlist[lasttrack.uri] != undefined && playlist[lasttrack.uri].owners.indexOf(user) == -1) {							
 							playlist[lasttrack.uri].owners.push(user);
-							console.log(playlist[lasttrack.uri].owners);
+							byom.moveUpLi(lasttrack.uri);
 						} else {
 							lasttrack.owners = [user];
 							playlist[lasttrack.uri] = lasttrack;
+							$('#playlist').append(buildSongLi(lasttrack));
 						}						
 					}
 					byom.updatePlaylist();
@@ -179,10 +187,10 @@ var Byom = function() {
 		return candidate_next;
 	}
 
-	var buildSongLi = function(song) {	
-		console.log(song);
+	var buildSongLi = function(song) {			
 		//Probably ask spotify for the whole song data from the song id
-		var ret =  '<li style="display: none" class="playlist-item" data-owners="' + song.owners.length + '">';
+		var ret =  '<li style="display: none" class="playlist-item" data-uri="' + song.uri + '" data-owners="' + song.owners.length + '">';
+		console.log(song.artists);
 		if(typeof(song.artists) == undefined || song.artists.length <= 0) {
 			return;
 		} else {

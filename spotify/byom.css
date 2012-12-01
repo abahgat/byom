@@ -2,19 +2,23 @@ body {
 	background: url('sp://byom/spotifyappbackground01.jpg') no-repeat;
 	height: 100%;
 	width: 100%;
+	color: white;
 }
 
 #playlist-container {
 	display: none;
 	margin-left: 10%;
-	background: #333333;
+	background: red;
+	opacity: 0.75;
 	width: 80%;
 }
 
 .playlist-item {
 	margin: 5px 10px;
 	list-style-type: none;
-	border: 1px solid #999999;
+	border: 1px solid white;
+	opacity: 1;
+	font-weight: bold;
 }
 
 .song-users {
