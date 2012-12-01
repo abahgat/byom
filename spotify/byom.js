@@ -23,9 +23,11 @@ var Byom = function() {
 	}
 
 	this.songFinished = function() {
+		console.log('Current song is finished!');
 		var nextSong = computeNextSong();
 		if(nextSong != null) {
-			playingSong = nextSong[0];
+			playingSong = nextSong;
+			playSong(playingSong);
 			$('#playing-title').html(playingSong.title);
 			$('#playing-artist').html(playingSong.artist);
 		} else {
@@ -150,6 +152,7 @@ var Byom = function() {
 				}
 			}
 		}
+		console.log('And the next song is... ' + candidate_next.name);
 		return candidate_next;
 	}
 
@@ -171,4 +174,30 @@ var Byom = function() {
 
 		return ret;
 	}
+
+	var playSong = function(song) {
+		console.log('About to play ' + song.name);
+		models.player.playTrack(models.Track.fromURI(song.uri));
+	}
+
+	var initCallback = function(callback) {
+		console.log('setting callback');
+		// Update the DOM when the song changes
+	    models.player.addEventListener('change', updateCurrentTrack);
+
+	    function updateCurrentTrack() {
+	    	console.log('Update track');
+	    	// we are not using playlists, so this should always be null
+	        if (!models.player.playing) {
+	            console.log('What\'s next?');
+	            callback();
+	            console.log('Called callback');
+	        } else {
+	        	console.log('More?');
+	        	console.log(models.player);
+	        }
+	    }
+	}
+
+	initCallback(this.songFinished);
 }
