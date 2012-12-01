@@ -1,0 +1,13 @@
+{
+	"BundleType": "Application",
+	"BundleIdentifier": "byom",
+	"AppIcon": {
+		"36x18": "tutorial.png"
+	},
+	"AppName": {
+		"en": "Bring Your Own Music"
+	},
+	"SupportedLanguages": [
+		"en"
+	]
+}
