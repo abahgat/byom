@@ -52,7 +52,8 @@ var Byom = function() {
 		} else {
 			$('#playing-song').html('End of playlist :(');
 		}
-		this.scrollUpPlaylist();
+		// yeah!! :S
+		window.byom.scrollUpPlaylist();
 	}
 
 	this.scrollUpPlaylist = function() {
@@ -67,7 +68,12 @@ var Byom = function() {
 				$.each(data.entities[0].playlists, function(index, value) {				
 					console.log('playlist ' + value);
 					byom.addSpotifyPlaylist(value);
-				});			
+				});
+
+				if (!models.player.playing) {
+					// :S
+					window.byom.songFinished();
+				}			
 			}
 			latest_jukebox_poll = data.entities[0].modified;
 		})
