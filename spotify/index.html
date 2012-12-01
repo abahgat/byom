@@ -8,12 +8,13 @@
 	<script type="text/javascript" src="jquery-1.8.3.min.js"></script>
 	<script type="text/javascript" src="byom.js"></script>
 	<script type="text/javascript">
-		var byom = null;
-		var models = null;
-		require(['$api/models'], function(models) {
-			window.models = models;
-			byom = new Byom();
-           	byom.getJukebox();
+		var byom = null;		
+		$(document).ready(function() {			
+			require(['$api/models'], function(models) {
+				window.models = models;
+				byom = new Byom();
+	           	//byom.getJukebox();
+			});
 		});
 	</script>
 </head>
