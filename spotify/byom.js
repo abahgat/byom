@@ -188,7 +188,7 @@ var Byom = function() {
 	    function updateCurrentTrack() {
 	    	console.log('Update track');
 	    	// song is finished
-	        if (!models.player.playing && player.position == 0) {
+	        if (!models.player.playing && model.player.position == 0) {
 	            console.log('What\'s next?');
 	            callback();
 	        } else {
