@@ -157,7 +157,7 @@ var Byom = function() {
 		console.log(song);
 		//Probably ask spotify for the whole song data from the song id
 		var ret =  '<li style="display: none"><span class="song-title">' + song.name + '</span>';
-		if(typeof(song.artists) != undefined && song.artists.length <= 0) {
+		if(typeof(song.artists) == undefined || song.artists.length <= 0) {
 			return;
 		} else {
 			ret += '<span class="song-artist">' + song.artists[0].name + '<span><ul class="song-users">';
