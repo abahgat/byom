@@ -55,12 +55,11 @@ var Byom = function() {
 	this.moveUpLi = function(uri) {		
 
 		var li = $('#playlist li[data-uri="' + uri + '"]');
-		li.hide(1500).remove();		
-		console.log(li.data('owners'));
-		console.log($('#playlist li[data-owners="' + (li.data('owners')) + '"]:first'));
+		li.hide('slide', {direction: 'left'}, 1500).remove();					
 		$(buildSongLi(playlist[uri])).insertBefore($('#playlist li[data-owners="' + (li.data('owners')) + '"]:first'));
 		//newli = $('#playlist li[data-owners="' + (li.data('owners')) + '"]:first').insertBefore(buildSongLi(playlist[uri]));		
-		$('#playlist li:first').show(1500);
+		$('#playlist li:first').show('slide', {direction: 'right'}, 1500);
+		$('.ui-effects-wrapper').hide();
 	}
 
 	this.scrollUpPlaylist = function() {
