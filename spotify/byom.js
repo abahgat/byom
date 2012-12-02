@@ -9,6 +9,7 @@ var Byom = function() {
 	var latest_swipes_poll = 0;
 	var jukebox_poll;
 	var latest_jukebox_poll = 0;
+	var playlist_limit = 40;
 			
 	this.updatePlaylist = function() {
 		console.log(playlist);
@@ -160,7 +161,7 @@ var Byom = function() {
 			models.User.fromURI(spotifyPlaylist.owner).load('name', 'image').done(function(user) {
 				spotifyPlaylist.tracks.snapshot().done(function(tracks) {
 					//console.log("PLAYLIST OWNER " + JSON.stringify(user));
-					for(var i = 0; i < tracks.length; i++) {						
+					for(var i = 0; (i < tracks.length && i < playlist_limit); i++) {						
 						var lasttrack = tracks.get(i);												
 						if(playlist[lasttrack.uri] != undefined && playlist[lasttrack.uri].owners.indexOf(user) == -1) {							
 							playlist[lasttrack.uri].owners.push(user);
@@ -197,7 +198,7 @@ var Byom = function() {
 		//Probably ask spotify for the whole song data from the song id
 		var ret =  '<li style="display: none" class="playlist-item" data-uri="' + song.uri + '" data-owners="' + song.owners.length + '">';
 		//console.log(song.artists);
-		if(typeof(song.artists) == undefined || song.artists.length <= 0) {
+		if(!song.artists || typeof(song.artists) == 'undefined' || song.artists.length <= 0) {
 			return;
 		} else {
 			ret += '<span class="song-artist">' + song.artists[0].name + '</span> - ';
