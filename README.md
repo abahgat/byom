@@ -1,4 +1,4 @@
-soundscape
+BYOM (Bring Your Own Music)
 ==========
 
-The soundscape of a city
+An experiment in token-based music sharing
