@@ -43,6 +43,7 @@ var Byom = function() {
 		if(nextSong != null) {
 			playingSong = nextSong;		
 			playSong(playingSong);
+			$('#playing-cover').attr('src', playingSong.image);
 			$('#playing-title').html(playingSong.name);
 			$('#playing-artist').html(playingSong.artists[0].name);
 		} else {
@@ -209,7 +210,7 @@ var Byom = function() {
 		if(!song.artists || typeof(song.artists) == 'undefined' || song.artists.length <= 0) {
 			return;
 		} else {
-			ret += '<span class="song-artist">' + song.artists[0].name + '</span> - ';
+			ret += '<span class="song-artist">' + song.artists[0].name + '</span><span> - </span>';
 		}
 
 		ret += '<span class="song-title">' + song.name + '</span>';
@@ -223,6 +224,7 @@ var Byom = function() {
 
 		song.album.load('image').done(function(album) {
 			console.log('setting image for album ' + album.uri + ' to ' + album.image);
+			playlist[song.uri].image = album.image;
 			$('img[data-album="' + album.uri + '"]').attr('src', album.image);
 		});		
 
