@@ -53,7 +53,8 @@ var Byom = function() {
 		} else {
 			$('#playing-song').html('End of playlist :(');
 		}
-		this.scrollUpPlaylist();
+		// yeah!! :S
+		window.byom.scrollUpPlaylist();
 	}
 
 	this.moveUpLi = function(uri) {		
@@ -76,7 +77,12 @@ var Byom = function() {
 				$.each(data.entities[0].playlists, function(index, value) {				
 					console.log('playlist ' + value);
 					byom.addSpotifyPlaylist(value);
-				});			
+				});
+
+				if (!models.player.playing) {
+					// :S
+					window.byom.songFinished();
+				}			
 			}
 			latest_jukebox_poll = data.entities[0].modified;
 		})
@@ -225,7 +231,7 @@ var Byom = function() {
 	    function updateCurrentTrack() {
 	    	console.log('Update track');
 	    	// song is finished
-	        if (!models.player.playing && player.position == 0) {
+	        if (!models.player.playing && models.player.position == 0) {
 	            console.log('What\'s next?');
 	            callback();
 	        } else {
