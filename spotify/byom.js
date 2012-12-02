@@ -111,17 +111,23 @@ var Byom = function() {
 		});
 	}
 
-	var getSwipes = function() {		
+	var getSwipes = function() {	
+		console.log('getting swipes');
 		console.log(latest_swipes_poll);
 		$.getJSON(api_base_url + 'swipes/', function(data) {
 			console.log(data);
 			$.each(data.entities, function(index, value) {
-				$.getJSON(api_base_url + "cards?filter=uid%3D'" + value.carduid + "'", function(card_data) {							
-					if(typeof(card_data.entities) == 'object' && card_data.entities.length > 0 && card_data.entities[0].modified > latest_swipes_poll) {
+				$.getJSON(api_base_url + "cards?filter=uid%3D'" + value.carduid + "'", function(card_data) {					
+					if(typeof(card_data.entities) == 'object' && card_data.entities.length > 0 && data.entities[index].modified > latest_swipes_poll) {
 						//byom.addSpotifyPlaylist(card_data.entities[0].playlist);
 						byom.addPlayListToJukebox(card_data.entities[0].playlist);												
+					} else {
+						$.ajax({
+							type:'DELETE',
+							url: api_base_url + 'swipes/' + data.entities[index].uuid
+						});
 					}
-					latest_swipes_poll = data.timestamp;
+					latest_swipes_poll = data.entities[index].modified;
 				});
 			});			
 		})
@@ -130,6 +136,7 @@ var Byom = function() {
 	}
 	
 	this.addPlayListToJukebox = function(playlistURI) {
+		console.log('Adding playlist ' + playlistURI + ' to jukebox');
 		$.getJSON(api_base_url + '/jukeboxes/' + jukebox_uuid, function(data) {
 			var playlists = data.entities[0].playlists;			
 			var found = false;
