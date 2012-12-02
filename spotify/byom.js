@@ -60,7 +60,9 @@ var Byom = function() {
 		li.hide('slide', {direction: 'left'}, 1500).remove();					
 		$(buildSongLi(playlist[uri])).insertBefore($('#playlist li[data-owners="' + (li.data('owners')) + '"]:first'));
 		//newli = $('#playlist li[data-owners="' + (li.data('owners')) + '"]:first').insertBefore(buildSongLi(playlist[uri]));		
-		$('#playlist li:first').show('slide', {direction: 'right'}, 1500);
+		$('#playlist li:first').show('slide', {direction: 'right'}, 1500, function() {
+			$(this).effect('highlight', {color: '#FFFFFF'}, 2500);
+		});
 		$('.ui-effects-wrapper').hide();
 	}
 
@@ -180,6 +182,7 @@ var Byom = function() {
 							$('#splash-screen').hide('slow');
 							if($('#playlist li[data-uri="'+lasttrack.uri+'"]').length == 0) {
 								$('#playlist').append(buildSongLi(lasttrack)).children('li').show('slow');
+								$('#playlist li[data-uri="' + lasttrack.uri + '"]').effect('highlight', {color: '#FFFFFF'}, 2500);
 							}
 						}						
 					}
