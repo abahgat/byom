@@ -78,19 +78,14 @@ var Byom = function() {
 				$.each(data.entities[0].playlists, function(index, value) {				
 					console.log('playlist ' + value);
 					byom.addSpotifyPlaylist(value);
-				});
-
-				if (!models.player.playing) {
-					// :S
-					window.byom.songFinished();
-				}			
+				});						
 			}
 			latest_jukebox_poll = data.entities[0].modified;
 		})
 	}
 
 	this.startSwipesPoll = function() {
-		swipes_poll = setInterval(getSwipes, 5000);
+		swipes_poll = setInterval(getSwipes, 2500);
 	}
 
 	this.stopSwipesPoll = function() {
@@ -98,7 +93,7 @@ var Byom = function() {
 	}
 
 	this.startJukeboxPoll = function() {
-		jukebox_poll = setInterval(this.getJukebox, 5000);
+		jukebox_poll = setInterval(this.getJukebox, 2500);
 	}
 
 	this.stopJukeboxPoll = function() {
@@ -186,6 +181,10 @@ var Byom = function() {
 							}
 						}						
 					}
+					if (!models.player.playing) {
+						// :S
+						window.byom.songFinished();
+					}	
 					//byom.updatePlaylist();
 				});
 			});			
