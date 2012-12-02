@@ -1,5 +1,5 @@
 body {
-	background: url('sp://byom/spotifyappbackground01.jpg') no-repeat;
+	background: black url('sp://byom/spotifyappbackground01.jpg') no-repeat fixed;
 	height: 100%;
 	width: 100%;
 	color: white;

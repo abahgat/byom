@@ -189,7 +189,9 @@ var Byom = function() {
 				}
 			}
 		}
-		console.log('And the next song is... ' + candidate_next.name);
+
+		if (candidate_next != null) console.log('And the next song is... ' + candidate_next.name);
+		
 		return candidate_next;
 	}
 
