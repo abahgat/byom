@@ -46,11 +46,12 @@ var Byom = function() {
 			$('#playing-cover').attr('src', playingSong.image);
 			$('#playing-title').html(playingSong.name);
 			$('#playing-artist').html(playingSong.artists[0].name);
+			window.byom.scrollUpPlaylist(playingSong.uri);
 		} else {
 			$('#playing-song').html('End of playlist :(');
 		}
 		// yeah!! :S
-		window.byom.scrollUpPlaylist();
+		
 	}
 
 	this.moveUpLi = function(uri) {		
@@ -63,8 +64,8 @@ var Byom = function() {
 		$('.ui-effects-wrapper').hide();
 	}
 
-	this.scrollUpPlaylist = function() {
-		$('#playlist li:first').hide('slow').remove();
+	this.scrollUpPlaylist = function(uri) {
+		$('#playlist li[data-uri="' + uri + '"]').hide('slow').remove();
 	}
 
 
