@@ -9,6 +9,7 @@ var Byom = function() {
 	var latest_swipes_poll = 0;
 	var jukebox_poll;
 	var latest_jukebox_poll = 0;
+	var playlist_limit = 40;
 			
 	this.updatePlaylist = function() {
 		console.log(playlist);
@@ -30,12 +31,6 @@ var Byom = function() {
 		playlistUl.find('li').each(function(index, value) {
 			$(this).show('slow');
 		});		
-	}
-
-	this.reorderPlaylist = function() {
-		console.log('reorder');
-		var ul = $('#playlist');
-		
 	}
 
 	this.songFinished = function() {
@@ -60,9 +55,11 @@ var Byom = function() {
 	this.moveUpLi = function(uri) {		
 
 		var li = $('#playlist li[data-uri="' + uri + '"]');
-		li.hide(1500).remove();		
-		newli = $('#playlist li[data-owners="' + (li.data('owners')) + '"]:first').insertBefore(buildSongLi(playlist[uri]));		
-		$('#playlist li:first').show(1500);
+		li.hide('slide', {direction: 'left'}, 1500).remove();					
+		$(buildSongLi(playlist[uri])).insertBefore($('#playlist li[data-owners="' + (li.data('owners')) + '"]:first'));
+		//newli = $('#playlist li[data-owners="' + (li.data('owners')) + '"]:first').insertBefore(buildSongLi(playlist[uri]));		
+		$('#playlist li:first').show('slide', {direction: 'right'}, 1500);
+		$('.ui-effects-wrapper').hide();
 	}
 
 	this.scrollUpPlaylist = function() {
@@ -124,7 +121,7 @@ var Byom = function() {
 						//byom.addSpotifyPlaylist(card_data.entities[0].playlist);
 						byom.addPlayListToJukebox(card_data.entities[0].playlist);												
 					}
-					latest_poll = data.timestamp;
+					latest_swipes_poll = data.timestamp;
 				});
 			});			
 		})
@@ -163,7 +160,7 @@ var Byom = function() {
 			models.User.fromURI(spotifyPlaylist.owner).load('name', 'image').done(function(user) {
 				spotifyPlaylist.tracks.snapshot().done(function(tracks) {
 					//console.log("PLAYLIST OWNER " + JSON.stringify(user));
-					for(var i = 0; i < tracks.length; i++) {						
+					for(var i = 0; (i < tracks.length && i < playlist_limit); i++) {						
 						var lasttrack = tracks.get(i);												
 						if(playlist[lasttrack.uri] != undefined && playlist[lasttrack.uri].owners.indexOf(user) == -1) {							
 							playlist[lasttrack.uri].owners.push(user);
@@ -202,7 +199,7 @@ var Byom = function() {
 		ret += '<img src="sp://byom/track.png" data-album="' + song.album.uri + '" />';
 
 		//console.log(song.artists);
-		if(typeof(song.artists) == undefined || song.artists.length <= 0) {
+		if(!song.artists || typeof(song.artists) == 'undefined' || song.artists.length <= 0) {
 			return;
 		} else {
 			ret += '<span class="song-artist">' + song.artists[0].name + '</span> - ';
@@ -227,6 +224,7 @@ var Byom = function() {
 
 	var playSong = function(song) {
 		console.log('About to play ' + song.name);
+		$('#playing-song').show('slow');
 		models.player.playTrack(models.Track.fromURI(song.uri));
 	}
 

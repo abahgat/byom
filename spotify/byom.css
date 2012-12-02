@@ -6,6 +6,10 @@ body {
 	font-family: Helvetica, Verdana, sans-serif;
 }
 
+.ui-effects-wrapper {
+	display: none;
+}
+
 #splash-screen {
 	background: red;
 	opacity: 0.75;
@@ -27,6 +31,13 @@ body {
 	font-size: 30px;
 	line-height: 32px;
 	height: 150px;
+}
+
+#playing-song {
+	width: 100%;
+	background: red;
+	opacity: 0.75;
+	display: none;
 }
 
 #playlist-container {	
