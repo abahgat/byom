@@ -16,7 +16,7 @@ var Byom = function() {
 		var playlistUl = $('#playlist');
 		playlistUl.empty();
 		$.each(playlist, function(index, value) {			
-			playlistUl.append(buildSongLi(value));			
+			playlistUl.append(buildSongLi(value));
 		});
 		var listitems = playlistUl.children('li').get();
 
@@ -197,8 +197,10 @@ var Byom = function() {
 	}
 
 	var buildSongLi = function(song) {			
-		//Probably ask spotify for the whole song data from the song id
 		var ret =  '<li style="display: none" class="playlist-item" data-uri="' + song.uri + '" data-owners="' + song.owners.length + '">';
+		
+		ret += '<img src="sp://byom/track.png" data-album="' + song.album.uri + '" />';
+
 		//console.log(song.artists);
 		if(typeof(song.artists) == undefined || song.artists.length <= 0) {
 			return;
@@ -214,6 +216,11 @@ var Byom = function() {
 		});
 
 		ret += '</ul></li>';
+
+		song.album.load('image').done(function(album) {
+			console.log('setting image for album ' + album.uri + ' to ' + album.image);
+			$('img[data-album="' + album.uri + '"]').attr('src', album.image);
+		});		
 
 		return ret;
 	}
@@ -236,7 +243,6 @@ var Byom = function() {
 	            callback();
 	        } else {
 	        	console.log('More?');
-	        	console.log(models.player);
 	        }
 	    }
 	}
