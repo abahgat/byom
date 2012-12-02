@@ -59,9 +59,9 @@ var Byom = function() {
 	this.moveUpLi = function(uri) {		
 
 		var li = $('#playlist li[data-uri="' + uri + '"]');
-		li.hide('slow');
-		$('#playlist').append(li);
-		li.show('slow').remove();
+		li.hide(1500).remove();		
+		newli = $('#playlist li[data-owners="' + (li.data('owners')) + '"]:first').insertBefore(buildSongLi(playlist[uri]));		
+		$('#playlist li:first').show(1500);
 	}
 
 	this.scrollUpPlaylist = function() {
@@ -156,7 +156,7 @@ var Byom = function() {
 			lastplaylist = spotifyPlaylist;
 			models.User.fromURI(spotifyPlaylist.owner).load('name', 'image').done(function(user) {
 				spotifyPlaylist.tracks.snapshot().done(function(tracks) {
-					console.log("PLAYLIST OWNER " + JSON.stringify(user));
+					//console.log("PLAYLIST OWNER " + JSON.stringify(user));
 					for(var i = 0; i < tracks.length; i++) {						
 						var lasttrack = tracks.get(i);												
 						if(playlist[lasttrack.uri] != undefined && playlist[lasttrack.uri].owners.indexOf(user) == -1) {							
@@ -165,10 +165,13 @@ var Byom = function() {
 						} else {
 							lasttrack.owners = [user];
 							playlist[lasttrack.uri] = lasttrack;
-							$('#playlist').append(buildSongLi(lasttrack));
+							$('#splash-screen').hide('slow');
+							if($('#playlist li[data-uri="'+lasttrack.uri+'"]').length == 0) {
+								$('#playlist').append(buildSongLi(lasttrack)).children('li').show('slow');
+							}
 						}						
 					}
-					byom.updatePlaylist();
+					//byom.updatePlaylist();
 				});
 			});			
 		});		
@@ -190,7 +193,7 @@ var Byom = function() {
 	var buildSongLi = function(song) {			
 		//Probably ask spotify for the whole song data from the song id
 		var ret =  '<li style="display: none" class="playlist-item" data-uri="' + song.uri + '" data-owners="' + song.owners.length + '">';
-		console.log(song.artists);
+		//console.log(song.artists);
 		if(typeof(song.artists) == undefined || song.artists.length <= 0) {
 			return;
 		} else {
