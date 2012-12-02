@@ -30,8 +30,8 @@
 $(document).ready(function () {
 
    //Your org and app combination - change this!!
-   var org = 'diderikvw'; //<== your organization
-   var app = 'byom';//<== your application
+   var org = ''; //<== your organization
+   var app = '';//<== your application
 
    //path to the api
    var apiUrl = "https://api.usergrid.com/"+org+"/"+app+"/";
