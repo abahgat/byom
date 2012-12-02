@@ -10,6 +10,7 @@ var Byom = function() {
 	var jukebox_poll;
 	var latest_jukebox_poll = 0;
 	var playlist_limit = 40;
+	var played = {};
 			
 	this.updatePlaylist = function() {
 		console.log(playlist);
@@ -34,10 +35,7 @@ var Byom = function() {
 	}
 
 	this.songFinished = function() {
-
-		if(playingSong != null) {
-			delete playlist[playingSong.uri];
-		}
+		
 		console.log('Current song is finished!');
 		var nextSong = computeNextSong();
 		if(nextSong != null) {
@@ -45,7 +43,16 @@ var Byom = function() {
 			playSong(playingSong);
 			$('#playing-cover').attr('src', playingSong.image);
 			$('#playing-title').html(playingSong.name);
-			$('#playing-artist').html(playingSong.artists[0].name);
+			if(typeof(playingSong.artists) != 'undefined') {
+				$('#playing-artist').html(playingSong.artists[0].name);
+			} else {
+				$('#playing-artist').html('Unknown artist');
+			}
+			if(playingSong != null) {
+				console.log('Removing ' + playingSong.uri + ' from playlist');
+				delete playlist[playingSong.uri];
+				played[playingSong.uri] = playingSong;
+			}
 			window.byom.scrollUpPlaylist(playingSong.uri);
 		} else {
 			$('#playing-song').html('End of playlist :(');
@@ -73,7 +80,7 @@ var Byom = function() {
 
 	this.getJukebox = function() {
 		$.getJSON(api_base_url + 'jukeboxes/' + jukebox_uuid, function(data) {
-			console.log(data);
+			//console.log(data);
 			if(data.entities[0].modified > latest_jukebox_poll) {
 				$.each(data.entities[0].playlists, function(index, value) {				
 					console.log('playlist ' + value);
@@ -85,7 +92,7 @@ var Byom = function() {
 	}
 
 	this.startSwipesPoll = function() {
-		swipes_poll = setInterval(getSwipes, 2500);
+		swipes_poll = setInterval(getSwipes, 1000);
 	}
 
 	this.stopSwipesPoll = function() {
@@ -93,7 +100,7 @@ var Byom = function() {
 	}
 
 	this.startJukeboxPoll = function() {
-		jukebox_poll = setInterval(this.getJukebox, 2500);
+		jukebox_poll = setInterval(this.getJukebox, 1000);
 	}
 
 	this.stopJukeboxPoll = function() {
@@ -111,10 +118,8 @@ var Byom = function() {
 	}
 
 	var getSwipes = function() {	
-		console.log('getting swipes');
-		console.log(latest_swipes_poll);
 		$.getJSON(api_base_url + 'swipes/', function(data) {
-			console.log(data);
+			//console.log(data);
 			$.each(data.entities, function(index, value) {
 				$.getJSON(api_base_url + "cards?filter=uid%3D'" + value.carduid + "'", function(card_data) {					
 					if(typeof(card_data.entities) == 'object' && card_data.entities.length > 0 && data.entities[index].modified > latest_swipes_poll) {
@@ -158,6 +163,10 @@ var Byom = function() {
 				contentType: 'application/json'				
 			});
 		});
+	}
+
+	this.dumpPlaylist = function() {
+		console.log(playlist);
 	}
 
 	this.addSpotifyPlaylist = function(playlistURI) {				
@@ -209,7 +218,12 @@ var Byom = function() {
 	var buildSongLi = function(song) {			
 		var ret =  '<li style="display: none" class="playlist-item" data-uri="' + song.uri + '" data-owners="' + song.owners.length + '">';
 		
-		ret += '<img class="cover" src="sp://byom/track.png" data-album="' + song.album.uri + '" />';
+		console.log(song.album);
+		if(typeof(song.album) != 'undefined') {
+			ret += '<img class="cover" src="sp://byom/track.png" data-album="' + song.album.uri + '" />';
+		} else {
+			ret += '<img class="cover" src="sp://byom/track.png"/>';
+		}
 
 		//console.log(song.artists);
 		if(!song.artists || typeof(song.artists) == 'undefined' || song.artists.length <= 0) {
@@ -227,14 +241,18 @@ var Byom = function() {
 
 		ret += '</ul></li>';
 
-		song.album.load('image').done(function(album) {
-			console.log('setting image for album ' + album.uri + ' to ' + album.image);
-			playlist[song.uri].image = album.image;
-			var f = function() {
-				$('img[data-album="' + album.uri + '"]').attr('src', album.image);	
-			}
-			setTimeout(f, 500);
-		});		
+		if(typeof(song.album) != 'undefined') {
+			song.album.load('image').done(function(album) {			
+				console.log('setting image for album ' + album.uri + ' to ' + album.image);
+				if(typeof(playlist[song.uri]) != 'undefined') {
+					playlist[song.uri].image = album.image;
+				}
+				var f = function() {
+					$('img[data-album="' + album.uri + '"]').attr('src', album.image);	
+				}
+				setTimeout(f, 500);
+			});		
+		}
 
 		return ret;
 	}
