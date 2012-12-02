@@ -122,7 +122,7 @@ var Byom = function() {
 						//byom.addSpotifyPlaylist(card_data.entities[0].playlist);
 						byom.addPlayListToJukebox(card_data.entities[0].playlist);												
 					}
-					latest_poll = data.timestamp;
+					latest_swipes_poll = data.timestamp;
 				});
 			});			
 		})
