@@ -70,3 +70,8 @@ body {
 	height: 32px;
 	display: inline;
 }
+
+imgspot.cover {
+	width: 64px;
+	height: 64px;
+}
