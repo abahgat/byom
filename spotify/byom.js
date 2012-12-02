@@ -196,7 +196,7 @@ var Byom = function() {
 	var buildSongLi = function(song) {			
 		var ret =  '<li style="display: none" class="playlist-item" data-uri="' + song.uri + '" data-owners="' + song.owners.length + '">';
 		
-		ret += '<img src="sp://byom/track.png" data-album="' + song.album.uri + '" />';
+		ret += '<img class="cover" src="sp://byom/track.png" data-album="' + song.album.uri + '" />';
 
 		//console.log(song.artists);
 		if(!song.artists || typeof(song.artists) == 'undefined' || song.artists.length <= 0) {
