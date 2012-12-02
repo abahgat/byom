@@ -32,12 +32,6 @@ var Byom = function() {
 		});		
 	}
 
-	this.reorderPlaylist = function() {
-		console.log('reorder');
-		var ul = $('#playlist');
-		
-	}
-
 	this.songFinished = function() {
 
 		if(playingSong != null) {
@@ -61,7 +55,10 @@ var Byom = function() {
 
 		var li = $('#playlist li[data-uri="' + uri + '"]');
 		li.hide(1500).remove();		
-		newli = $('#playlist li[data-owners="' + (li.data('owners')) + '"]:first').insertBefore(buildSongLi(playlist[uri]));		
+		console.log(li.data('owners'));
+		console.log($('#playlist li[data-owners="' + (li.data('owners')) + '"]:first'));
+		$(buildSongLi(playlist[uri])).insertBefore($('#playlist li[data-owners="' + (li.data('owners')) + '"]:first'));
+		//newli = $('#playlist li[data-owners="' + (li.data('owners')) + '"]:first').insertBefore(buildSongLi(playlist[uri]));		
 		$('#playlist li:first').show(1500);
 	}
 
@@ -220,6 +217,7 @@ var Byom = function() {
 
 	var playSong = function(song) {
 		console.log('About to play ' + song.name);
+		$('#playing-song').show('slow');
 		models.player.playTrack(models.Track.fromURI(song.uri));
 	}
 

@@ -29,6 +29,13 @@ body {
 	height: 150px;
 }
 
+#playing-song {
+	width: 100%;
+	background: red;
+	opacity: 0.75;
+	display: none;
+}
+
 #playlist-container {	
 	margin-left: 10%;
 	background: red;
