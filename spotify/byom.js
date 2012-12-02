@@ -227,7 +227,10 @@ var Byom = function() {
 		song.album.load('image').done(function(album) {
 			console.log('setting image for album ' + album.uri + ' to ' + album.image);
 			playlist[song.uri].image = album.image;
-			$('img[data-album="' + album.uri + '"]').attr('src', album.image);
+			var f = function() {
+				$('img[data-album="' + album.uri + '"]').attr('src', album.image);	
+			}
+			setTimeout(f, 500);
 		});		
 
 		return ret;
